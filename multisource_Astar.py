@@ -101,6 +101,7 @@ def a_star(G, h_cost, sources):
                     min_est[v] = est[(v,cs)]    #improved best distance
                     min_src[v] = cs
                     print min_src
+                    
         print '-'*10
 
 
