@@ -1,12 +1,25 @@
-import class_mapping as MP
+'''
+TODO:
+ >>> the chain produced by A* includes the sources and the end .
+ it must not include them.
+ >>> check the above ^^
 
-def embed(G, H):
+2_ write get embedding
+3_ write validate embedding.
+
+'''
+import class_mapping as MP
+from random import shuffle
+
+def embed(G_dict, H_dict):
 
     #initialize mapping
-    mapping = MP.mapping(G, H)
+    mapping = MP.mapping(G_dict, H_dict)
 
     # create initial placement to have vertex model phi and inverse phi:
+
     mapping.initial_placement()
+
 
     # check if mapping is an embedding of G in H
     # If yes -->  return mapping
@@ -16,20 +29,23 @@ def embed(G, H):
     else:
         mapping = ripUP_and_reRoute(mapping)
 
+    return mapping
+
 
 def ripUP_and_reRoute(mapping):
 
-    # Find the number of unpaced variables:
+    # Find the number of unplaced variables:
 
     # Initialize some statistics:
 
-    # Make the directed H:
-
-    # Find diameter of H
-
-    # find a random order of nodegs of G:
+    # find a random order of vertices of G:
+    shuffled_G_Vertices = [v for v in list(mapping.G.nodes)]
+    shuffle(shuffled_G_Vertices)
 
     # BIG LOOP:-------------------------------------------
+    stage = 0
+    while stage <= 2:
+        stage += 1
     # Continue while :
     # 1_ an embedding is found
     # 2_ no improvement_max is reached
@@ -38,11 +54,15 @@ def ripUP_and_reRoute(mapping):
         # update the statstics
 
         # loop over variables in G:-------------------------
+        for vertex in shuffled_G_Vertices:
+            '''rip_UP:
+            '''
+            old_route = mapping.rip_UP(vertex)
 
-            # rip_UP $$$$$$$$$$$$
-            # re_route $$$$$$$$$$
 
-            mapping = re_route(variable, G, directed_H, phi, phi_inverse, diameter)
+            '''re_route :
+            '''
+            mapping.routing(vertex, old_root)
 
         # update statistics
 
@@ -56,41 +76,11 @@ def ripUP_and_reRoute(mapping):
 
     return mapping
 
+if __name__ == "__main__":
+    G_d = {0:[1,2,3,4], 1:[0,2,3,4], 2:[0,1,3,4], 3:[0,1,2,4], 4: [0,1,2,3]}
+    H_d = {0:[4,5,6,7], 1:[4,5,6,7], 2:[4,5,6,7], 3:[4,5,6,7],
+           4:[0,1,2,3], 5:[0,1,2,3], 6:[0,1,2,3], 7:[0,1,2,3]}
 
-def re_route(variable, G, directed_H, phi, phi_inverse, diameter):
+    res = embed(G_d, H_d)
 
-    # if this variable has a phi remove it and update the following:
-    # phi, inverse phi, node and edge weights on H
-
-    # Get its neighouring variables in G
-
-    # if all the neighbours are empty --> assign a random node on H
-    # if not :
-        chain = routing(variable, G, directed_H, phi, inverse_phi, diameter)
-
-    # Update phi and inverse phi according to chain
-
-    # update node wieghts on H
-
-    return mapping
-
-
-
-def routing(vertex, mapping, diameter):
-
-    # populate sources for vertex:
-    sources = mapping.add_sources(vertex)
-
-    # Prepare heuristic costs:
-    h_cost = ???
-
-    # A* gives the root node
-    root = a_star(mapping.directed_H, h_cost, sources)
-
-    # delete the sources for the mapping:
-    mapping.del_sources()
-
-    # build the path for the chain given the route.
-    chain = ???
-
-    return chain
+    print 'final solution:', res.phi
