@@ -76,3 +76,10 @@ def get_gerid_graph(K,T):
                 G_d[node[0]*T+node[1]].append(n[0]*T+n[1])
 
         return G_d
+
+def get_complete_graph(N):
+
+    G_d = {}
+    for n in range(N):
+        G_d[n]=[i for i in range(N) if i!=n]
+    return G_d

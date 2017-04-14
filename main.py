@@ -2,7 +2,7 @@
 '''
 import class_mapping as MP
 from random import shuffle
-
+import time
 
 def embed(G_dict, H_dict):
 
@@ -77,3 +77,12 @@ if __name__ == "__main__":
 
     print 'final solution:', res.phi
     res.visualize(positions)
+
+    for n in range(3,6):
+        G_d = GG.get_complete_graph(n)
+        H_d, positions = GG.get_chimera_graph(M=2,N=2,L=4)
+        t1=time.time()
+        res = embed(G_d, H_d)
+        t2=time.time()
+        print 'Complete graph of size', n, '@time:', t2-t1
+        res.visualize(positions)
