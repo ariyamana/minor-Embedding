@@ -1,5 +1,8 @@
 from random import shuffle, choice
 import class_graph as CLG
+import networkx as nx
+import matplotlib.pyplot as plt
+from numpy import random
 
 class mapping():
     def __init__(self, G_dict, H_dict):
@@ -60,18 +63,20 @@ class mapping():
             self.directed_H.available_nodes =\
             self.directed_H.available_nodes - set(self.phi[vertex])
 
-    def update_mapping(self):
-        ''' update vertex model phi and its inverse
-        based on the changes throut the rip-up and reroute algorithms'''
-        pass
 
     def is_valid_embedding(self):
         ''' check if the current mapping is a valid embedding.'''
-        return 0
+        NOT_VALID = False
 
-    def get_embedding(self):
-        ''' transform the current mapping into an embedding output format'''
-        pass
+        for v in self.G.nodes:
+            if len(self.phi[v]) == 0:
+                NOT_VALID = True
+
+        for node in self.phi_inverse.keys():
+            if  len(self.phi_inverse[node]) > 1:
+                NOT_VALID = True
+
+        return NOT_VALID
 
     def add_sources(self, vertex):
         ''' add dummy source nodes on the H graph to represent vertex models:'''
@@ -170,3 +175,40 @@ class mapping():
         self.phi[vertex]= []
 
         return old_root
+
+    def visualize(self, pos):
+
+        g_emb = nx.Graph()
+
+        g_emb.add_nodes_from(self.directed_H.original_nodes_list)
+
+        g_emb.add_edges_from(self.directed_H.edges)
+
+        #pos=nx.spring_layout(g_emb, iterations = 10*6)
+        color_dict={}
+        for vertex in self.G.nodes:
+            color_dict[vertex] = random.rand(3,1)
+
+        colors = []
+        labels={}
+        for node in self.directed_H.original_nodes_list:
+
+            if node in self.phi_inverse.keys():
+                if self.phi_inverse[node] ==[]:
+                    label[node]=' '
+                    colors.append([.9,0.9,0.9])
+                else:
+                    labels[node] = self.phi_inverse[node][0]
+                    colors.append(color_dict[self.phi_inverse[node][0]])
+            else:
+                colors.append([.9,0.9,0.9])
+                labels[node]=' '
+
+        nx.draw(g_emb, pos, node_size=100, node_color= colors)
+
+        nx.draw_networkx_labels(g_emb,pos,labels=labels,font_size=7,\
+        font_family='sans-serif', edge_color='#878787')
+
+        plt.axis('off')
+        #plt.savefig("weighted_graph.png") # save as png
+        plt.show() # display
