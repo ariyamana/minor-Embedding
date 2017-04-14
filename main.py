@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     for n in range(3,6):
         G_d = GG.get_complete_graph(n)
-        H_d, positions = GG.get_chimera_graph(M=2,N=2,L=4)
+        H_d, positions = GG.get_chimera_graph(M=3,N=3,L=4)
         t1=time.time()
         res = embed(G_d, H_d)
         t2=time.time()
